@@ -8,25 +8,27 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div>
+    <main>
       <Navbar />
       <HeroSection />
       <section className="relative py-16 md:py-24">
         <div className="conatainer mx-auto px-4">
-            <div className="mb-12 text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-xl">Featured Articles</h2>
-                <p>Discover our popular and trending content</p>
-            </div>
-        </div>
-        <TopArticles />
-        <div>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+              Featured Articles
+            </h2>
+            <p>Discover our popular and trending content</p>
+          </div>
+          <TopArticles />
+          <div className="text-center mt-12">
             <Link href={"/articles"}>
-                <Button className="rounded-full hover:bg-gray-900 hover:text-white dark:bg-white dark:hover:text-gray-900"></Button>
+              <Button className="rounded-full hover:bg-gray-900 hover:text-white dark:bg-white dark:hover:text-gray-900">View all articles</Button>
             </Link>
+          </div>
         </div>
       </section>
       <BlogFooter />
-    </div>
+    </main>
   );
 };
 
