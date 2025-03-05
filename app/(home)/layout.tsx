@@ -2,7 +2,7 @@ import React from "react";
 import { prisma } from "../../lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
-const layout = async ({ children }: { children: React.ReactNode }) => {
+const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await currentUser();
   if (!user) return null;
 
@@ -24,4 +24,4 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return <  >{children}</>;
 };
 
-export default layout;
+export default HomeLayout;
