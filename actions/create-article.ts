@@ -107,7 +107,7 @@ export const createArticle = async (prevState: CreateArticlesFormState, formData
                 title: result.data.title,
                 category: result.data.category,
                 content: result.data.content,
-                featuredImage: imageUrly,
+                featuredImage: imageUrl,
                 authorId: existingUser.id
             }
         });
