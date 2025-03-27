@@ -1,14 +1,31 @@
+import ArticleDetailPage from '@/components/articles/article-detail-page';
+import { prisma } from '@/lib/prisma';
 import React from 'react'
 
 type ArticlesDetailPageProps = {
     params: Promise<{id: string}>
 }
 
-const ArticlesDetailPage : React.FC<ArticlesDetailPageProps> = async ({params}) => {
+const ArticlesDetailMainPage : React.FC<ArticlesDetailPageProps> = async ({params}) => {
     const id = (await params).id;
+    const article = await prisma.articles.findUnique({
+        where: {id},
+        include:{
+            author: {
+                select: {
+                    name: true,
+                    email: true,
+                    imageUrl: true,
+                }
+            }
+        }
+    });
+    if(!article) return <h1>Article not found</h1>
   return (
-    <div>Articles Details Page - {id}</div>
+    <div>
+        <ArticleDetailPage article={article} />
+    </div>
   )
 }
 
-export default ArticlesDetailPage
+export default ArticlesDetailMainPage
