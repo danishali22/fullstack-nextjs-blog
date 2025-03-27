@@ -4,8 +4,27 @@ import { Button } from "../ui/button";
 import { Clock, FileText, MessageCircle, PlusCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import RecentArticles from "./recent-articles";
+import { prisma } from "@/lib/prisma";
 
-const BlogDashboard = () => {
+const BlogDashboard = async () => {
+  const [articles, totalComments] = await Promise.all([
+    prisma.articles.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        comments: true,
+        author: {
+          select: {
+            name: true,
+            email: true,
+            imageUrl: true,
+          },
+        },
+      },
+    }),
+    prisma.comments.count(),
+  ]);
   return (
     <main className="flex-1 md:p-8">
       <div className="flex items-center justify-between mb-8">
@@ -31,8 +50,10 @@ const BlogDashboard = () => {
             <FileText className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground pb-2">+5 from last month</p>
+            <div className="text-2xl font-bold">{articles.length}</div>
+            <p className="text-xs text-muted-foreground pb-2">
+              +5 from last month
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -43,7 +64,7 @@ const BlogDashboard = () => {
             <MessageCircle className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
+            <div className="text-2xl font-bold">{totalComments}</div>
             <p className="text-xs text-muted-foreground mt-1">
               +12 awaiting moderation
             </p>
@@ -64,7 +85,7 @@ const BlogDashboard = () => {
           </CardContent>
         </Card>
       </div>
-      <RecentArticles />
+      <RecentArticles articles={articles} />
     </main>
   );
 };

@@ -1,6 +1,6 @@
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
@@ -10,11 +10,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import Link from 'next/link';
+import Link from "next/link";
+import { Prisma } from "@prisma/client";
 
+type RecentArticlesProps = {
+  articles: Prisma.ArticlesGetPayload<{
+    include: {
+      comments: true;
+      author: {
+        select: {
+          name: true;
+          email: true;
+          imageUrl: true;
+        };
+      };
+    };
+  }>[];
+};
 
-
-const RecentArticles = () => {
+const RecentArticles: React.FC<RecentArticlesProps> = ({ articles }) => {
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -25,47 +39,64 @@ const RecentArticles = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Comments</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>Title dynamic</TableCell>
-              <TableCell>
-                <Badge variant="secondary" className='rounded-full bg-green-100 text-green-800'>Published</Badge>
-              </TableCell>
-              <TableCell>2</TableCell>
-              <TableCell>7 March</TableCell>
-              <TableCell>
-                <div className='flex gap-2'>
-                    <Link href={`/dashboard/articles/${123}/edit`}>
-                        <Button variant={"ghost"} size={"sm"}>Edit</Button>
-                    </Link>
-                    <DeleteButton />
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
+      {articles.length === 0 ? (
+        <CardContent>
+          <p className="text-muted-foreground">No articles found</p>
+        </CardContent>
+      ) : (
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Comments</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {articles.map((article) => (
+                <TableRow key={article.id}>
+                  <TableCell>{article.title}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="secondary"
+                      className="rounded-full bg-green-100 text-green-800"
+                    >
+                      Published
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{article.comments.length}</TableCell>
+                  <TableCell>{article.createdAt.toString()}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Link href={`/dashboard/articles/${article.id}/edit`}>
+                        <Button variant={"ghost"} size={"sm"}>
+                          Edit
+                        </Button>
+                      </Link>
+                      <DeleteButton />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      )}
     </Card>
   );
-}
+};
 
-export default RecentArticles
+export default RecentArticles;
 
 const DeleteButton = () => {
-    return (
-        <form action="">
-            <Button variant={"ghost"} size={"sm"} type='submit'>Delete</Button>
-        </form>
-    )
-}
+  return (
+    <form action="">
+      <Button variant={"ghost"} size={"sm"} type="submit">
+        Delete
+      </Button>
+    </form>
+  );
+};
