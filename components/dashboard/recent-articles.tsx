@@ -71,7 +71,7 @@ const RecentArticles: React.FC<RecentArticlesProps> = ({ articles }) => {
                     </Badge>
                   </TableCell>
                   <TableCell>{article.comments.length}</TableCell>
-                  <TableCell>{article.createdAt.toString()}</TableCell>
+                  <TableCell>{article.createdAt.toDateString()}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Link href={`/dashboard/articles/${article.id}/edit`}>
