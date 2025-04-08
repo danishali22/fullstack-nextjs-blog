@@ -28,7 +28,7 @@ const CommentList : React.FC<CommentListProps> = ({comments}) => {
           <div className="flex-1">
             <div className="mb-2">
               <span className="font-medium">{comment.author.name}</span>
-              <span className="text-sm text-muted-foreground ml-2">{comment.createdAt.toString()}</span>
+              <span className="text-sm text-muted-foreground ml-2">{comment.createdAt.toDateString()}</span>
             </div>
             <p>{comment.content}</p>
           </div>
