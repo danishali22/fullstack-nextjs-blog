@@ -1,9 +1,11 @@
 import AllArticlePage from '@/components/articles/all-article-page';
 import ArticleSearchInput from '@/components/articles/article-search-input'
 import { Button } from '@/components/ui/button'
+import { prisma } from '@/lib/prisma';
 import React from 'react'
 
 const ArticlesPage = () => {
+  
   return (
     <div className="min-h-screen bg-background">
       <main className="conatainer mx-auto px-4 py-12 sm:px-6 lg:text-5xl">
