@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from "@/components/ui/skeleton";
 import AllArticlePage from '@/components/articles/all-article-page';
 import ArticleSearchInput from '@/components/articles/article-search-input'
+import { fetchArticleByQuery } from '@/lib/query/fetch-article-by-query';
 
 type SearchParamsProps = {
   searchParams: Promise<{search?: string}>;
@@ -12,6 +13,7 @@ type SearchParamsProps = {
 
 const ArticlesPage : React.FC<SearchParamsProps> = async ({searchParams}) => {
   const searchText = (await searchParams).search || "";
+  const articles = await fetchArticleByQuery(searchText);
   return (
     <div className="min-h-screen bg-background">
       <main className="conatainer mx-auto px-4 py-12 sm:px-6 lg:text-5xl">
@@ -24,9 +26,9 @@ const ArticlesPage : React.FC<SearchParamsProps> = async ({searchParams}) => {
 
         {/* All Articles Page  */}
         <Suspense fallback={<AllArticlePageSkeleton />}>
-          <AllArticlePage searchText={searchText} />
+          <AllArticlePage articles={articles} />
         </Suspense>
-        
+
         {/* Pagination  */}
         <div className="mt-12 flex justify-center gap-2">
           <Button variant={"ghost"} size={"sm"}>

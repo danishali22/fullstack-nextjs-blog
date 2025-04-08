@@ -3,24 +3,36 @@ import { Card } from "../ui/card";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { fetchArticleByQuery } from "@/lib/query/fetch-article-by-query";
 import { Search } from "lucide-react";
+import type { Prisma } from "@prisma/client";
 
 type AllArticlePageProps = {
-  searchText: string;
+  articles: Prisma.ArticlesGetPayload<{
+    include: {
+      author: {
+        select: {
+          name: true;
+          email: true;
+          imageUrl: true;
+        };
+      };
+    };
+  }>[];
 };
 
 const AllArticlePage: React.FC<AllArticlePageProps> = async ({
-  searchText,
+  articles,
 }) => {
-  const articles = await fetchArticleByQuery(searchText);
   if (!articles || articles.length === 0) {
-    return <NoSearchResult />;
+    return <NoSearchResult />
   }
   return (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {articles.map((article) => (
-        <Card key={article.id} className="group relative overflow-hidden transition-all hover:shadow-lg">
+        <Card
+          key={article.id}
+          className="group relative overflow-hidden transition-all hover:shadow-lg"
+        >
           <div className="p-6">
             <div className="relative mb-4 h-48 w-full overflow-hidden rounded-xl">
               <Image
