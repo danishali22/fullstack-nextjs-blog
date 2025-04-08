@@ -4,6 +4,8 @@ import { Avatar, AvatarImage } from '../ui/avatar'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import LikeButton from './like-button'
 import CommentList from '../comments/comment-list'
+import CommentInput from '../comments/comment-input'
+import { prisma } from '@/lib/prisma'
 
 type ArticleDetailPageProps = {
     article: Prisma.ArticlesGetPayload<{
@@ -19,7 +21,19 @@ type ArticleDetailPageProps = {
     }>
 }
 
-const ArticleDetailPage : React.FC<ArticleDetailPageProps> = ({article}) => {
+const ArticleDetailPage : React.FC<ArticleDetailPageProps> = async ({article}) => {
+    const comments = await prisma.comments.findMany({
+      where: { articleId: article.id },
+      include: {
+        author: {
+          select: {
+            name: true,
+            email: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
   return (
     <div className='min-h-screen bg-background'>
         <main className='container mx-auto py-12 px-4 sm:px-6 lg:px-6'>
@@ -45,8 +59,10 @@ const ArticleDetailPage : React.FC<ArticleDetailPageProps> = ({article}) => {
                 {/* Article action button  */}
                 <LikeButton />
 
+                <CommentInput articleId={article.id} />
+
                 {/* Comment List  */}
-                <CommentList />
+                <CommentList comments={comments} />
             </article>
         </main>
     </div>
